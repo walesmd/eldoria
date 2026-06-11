@@ -6,7 +6,10 @@ no downloads, works offline.
 
 ## How to play
 
-**Easiest:** double-click **`start-game.command`** — it opens the game in your
+**Online:** play right now at **<https://walesmd.github.io/eldoria/>**
+(the [player's guide](https://walesmd.github.io/eldoria/guide/) is there too).
+
+**Locally:** double-click **`start-game.command`** — it opens the game in your
 browser. Leave the little terminal window open while playing.
 
 (Or run `python3 -m http.server 8123` in this folder and open
