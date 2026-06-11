@@ -1,0 +1,14 @@
+# Obsidian vault config
+.obsidian/
+
+# macOS
+.DS_Store
+
+# playtest tooling dependencies
+tools/node_modules/
+
+# generated playtest/screenshot artifacts (guide/img is kept — the guide needs it)
+tools/shots/
+tools/shots2/
+tools/shots5/
+tools/gallery/

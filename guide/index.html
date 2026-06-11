@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>The Shattered Crown — Official Player's Guide</title>
+<style>
+  @font-face { font-family: 'PressStart'; src: url('press-start-2p.woff2') format('woff2'); }
+  @page { size: Letter; margin: 0; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: #444; }
+  body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #221a10;
+         font-size: 10.5pt; line-height: 1.45; }
+
+  .page { width: 8.5in; height: 11in; margin: 0 auto; padding: 0.42in 0.45in 0.55in;
+          background: #fdf3df; position: relative; overflow: hidden;
+          page-break-after: always; }
+  .page.dark { background: #16142a; color: #efe8d8; }
+
+  /* halftone flavor */
+  .page::before { content: ''; position: absolute; inset: 0; pointer-events: none;
+    background-image: radial-gradient(#00000010 1px, transparent 1.4px);
+    background-size: 7px 7px; }
+  .page.dark::before { background-image: radial-gradient(#ffffff0d 1px, transparent 1.4px); }
+
+  .pagefoot { position: absolute; bottom: 0.18in; left: 0.45in; right: 0.45in;
+    display: flex; justify-content: space-between; font-family: 'PressStart';
+    font-size: 7px; color: #b3431f; }
+  .dark .pagefoot { color: #ffcb05; }
+
+  h1, h2, h3, .px { font-family: 'PressStart', monospace; line-height: 1.4; }
+  h2 { font-size: 17px; color: #e4002b; margin: 0 0 10px;
+       text-shadow: 2.5px 2.5px 0 #ffcb05; letter-spacing: 0; }
+  .dark h2 { color: #ffcb05; text-shadow: 2.5px 2.5px 0 #e4002b; }
+  h3 { font-size: 10px; margin: 14px 0 6px; color: #6f2da8; }
+  .dark h3 { color: #7fe9ff; }
+  p { margin: 0 0 8px; }
+
+  .kicker { font-family: 'PressStart'; font-size: 8px; color: #00a5b5;
+            letter-spacing: 1px; margin-bottom: 4px; }
+
+  .cols2 { column-count: 2; column-gap: 0.28in; }
+  .cols3 { column-count: 3; column-gap: 0.22in; }
+  .nobreak { break-inside: avoid; }
+
+  /* boxes */
+  .tipbox, .warnbox, .lorebox, .secretbox {
+    border: 3px solid #221a10; padding: 9px 11px; margin: 10px 0;
+    box-shadow: 4px 4px 0 #00000022; break-inside: avoid; position: relative; }
+  .tipbox  { background: #fff7c8; border-color: #b3431f; color: #221a10; }
+  .warnbox { background: #ffd9d2; border-color: #e4002b; color: #221a10; }
+  .lorebox { background: #e7e2f7; border-color: #6f2da8; font-style: italic; color: #221a10; }
+  .secretbox { background: #d8f3ee; border-color: #00a5b5; border-style: dashed; color: #221a10; }
+  .dark .lorebox { background: #241f44; color: #d8d2f0; }
+  .boxtag { font-family: 'PressStart'; font-size: 7.5px; font-style: normal;
+    position: absolute; top: -10px; left: 8px; padding: 3px 7px; color: #fff; }
+  .tipbox .boxtag { background: #b3431f; }
+  .warnbox .boxtag { background: #e4002b; }
+  .lorebox .boxtag { background: #6f2da8; }
+  .secretbox .boxtag { background: #00a5b5; }
+
+  /* screenshots */
+  .shot { border: 4px solid #221a10; box-shadow: 5px 5px 0 #00000033;
+          display: block; width: 100%; image-rendering: pixelated; }
+  .dark .shot { border-color: #ffcb05; }
+  .shotwrap { margin: 8px 0 12px; break-inside: avoid; }
+  .caption { font-family: 'PressStart'; font-size: 6.5px; background: #221a10; color: #ffcb05;
+             padding: 5px 7px; line-height: 1.6; }
+
+  .sprite { image-rendering: pixelated; vertical-align: middle; }
+
+  /* bestiary cards */
+  .beast { display: flex; gap: 8px; align-items: flex-start; border: 2.5px solid #221a10;
+           background: #fffdf4; padding: 7px 8px; margin: 0 0 8px; break-inside: avoid;
+           box-shadow: 3px 3px 0 #00000022; }
+  .beast img { width: 44px; height: 44px; image-rendering: pixelated; flex: none;
+               background: #cfe7cf; border: 2px solid #221a10; padding: 3px; }
+  .beast.big img { width: 56px; height: 56px; }
+  .beast b { font-family: 'PressStart'; font-size: 8px; color: #e4002b; display: block;
+             margin-bottom: 3px; }
+  .beast .stats { font-family: 'PressStart'; font-size: 6px; color: #6f2da8;
+                  display: block; margin-bottom: 3px; }
+  .beast p { font-size: 9pt; margin: 0; line-height: 1.35; }
+
+  /* item rows */
+  .item { display: flex; gap: 9px; align-items: center; margin: 0 0 9px; break-inside: avoid; }
+  .item img { width: 36px; height: 36px; image-rendering: pixelated; flex: none;
+              background: #efe6cd; border: 2.5px solid #221a10; padding: 3px; }
+  .item b { font-family: 'PressStart'; font-size: 7.5px; color: #b3431f; display: block;
+            margin-bottom: 2px; }
+  .item p { font-size: 9pt; margin: 0; line-height: 1.3; }
+
+  table { border-collapse: collapse; width: 100%; margin: 8px 0; }
+  th { font-family: 'PressStart'; font-size: 6.5px; background: #221a10; color: #ffcb05;
+       padding: 5px 6px; text-align: left; }
+  td { border: 1.5px solid #221a10; padding: 4px 6px; font-size: 9pt; background: #fffdf4; }
+  .dark td { background: #241f44; border-color: #7fe9ff55; }
+
+  /* world map markers */
+  .mapwrap { position: relative; margin: 6px 0 4px; border: 4px solid #221a10;
+             box-shadow: 5px 5px 0 #00000033; }
+  .mapwrap img { display: block; width: 100%; image-rendering: pixelated; }
+  .marker { position: absolute; min-width: 17px; height: 17px; padding: 0 2px;
+    transform: translate(-50%, -50%);
+    background: #e4002b; color: #fff; border: 2px solid #fff; border-radius: 9px;
+    font-family: 'PressStart'; font-size: 7px; line-height: 14px; text-align: center;
+    box-shadow: 0 0 0 1.5px #000; }
+  .marker.blue { background: #00a5b5; }
+  .marker.purple { background: #6f2da8; }
+  .legend { column-count: 3; column-gap: 0.2in; font-size: 8.6pt; margin-top: 8px; }
+  .legend div { break-inside: avoid; margin-bottom: 3px; }
+  .legend .n { display: inline-block; min-width: 14px; height: 14px; padding: 0 2px;
+    background: #e4002b;
+    color: #fff; border-radius: 8px; font-family: 'PressStart'; font-size: 6px;
+    line-height: 14px; text-align: center; margin-right: 5px; }
+  .legend .n.blue { background: #00a5b5; }
+  .legend .n.purple { background: #6f2da8; }
+
+  .bigbadge { display: inline-block; background: #e4002b; color: #fff;
+    font-family: 'PressStart'; font-size: 9px; padding: 8px 12px; transform: rotate(-3deg);
+    box-shadow: 3px 3px 0 #221a10; margin: 6px 0; }
+
+  ul { margin: 4px 0 10px; padding-left: 18px; }
+  li { margin-bottom: 4px; }
+
+  /* ---------- COVER ---------- */
+  .cover { background: linear-gradient(160deg, #1b1340 0%, #2c1a5e 45%, #6f2da8 100%);
+           color: #fff; text-align: center; display: flex; flex-direction: column; }
+  .cover::before { background-image: radial-gradient(#ffffff14 1px, transparent 1.6px); }
+  .cover .npbar { background: #e4002b; color: #fff; font-family: 'PressStart';
+    font-size: 11px; padding: 10px; margin: -0.42in -0.45in 0.25in; letter-spacing: 1px;
+    border-bottom: 5px solid #ffcb05; }
+  .cover h1 { font-size: 34px; color: #ffcb05; text-shadow: 4px 4px 0 #e4002b;
+              margin: 12px 0 6px; line-height: 1.5; }
+  .cover .sub { font-family: 'PressStart'; font-size: 10px; color: #7fe9ff; margin-bottom: 16px; }
+  .cover .shotwrap { width: 5.6in; margin: 10px auto; }
+  .coverburst { position: absolute; right: 0.5in; top: 3.1in; background: #ffcb05; color: #221a10;
+    font-family: 'PressStart'; font-size: 8px; padding: 16px 12px; transform: rotate(8deg);
+    border-radius: 50%; width: 1.7in; height: 1.7in; display: flex; align-items: center;
+    justify-content: center; text-align: center; box-shadow: 4px 4px 0 #00000055;
+    border: 4px dashed #e4002b; line-height: 1.7; }
+  .cover .price { font-family: 'PressStart'; font-size: 8px; color: #ffffffaa; margin-top: auto; }
+</style>
+</head>
+<body>
+
+<!-- ============================== COVER ============================== -->
+<div class="page cover">
+  <div class="npbar">★ ELDORIA POWER ★ OFFICIAL PLAYER'S GUIDE ★</div>
+  <h1>THE<br>SHATTERED<br>CROWN</h1>
+  <div class="sub">COMPLETE WALKTHROUGH &nbsp;•&nbsp; ALL MAPS &nbsp;•&nbsp; EVERY SECRET</div>
+  <div class="shotwrap"><img class="shot" src="img/shot-title.png" alt=""></div>
+  <div class="coverburst">ALL&nbsp;12 GOLDEN ACORNS REVEALED INSIDE!!</div>
+  <div class="sub" style="color:#ffcb05; margin-top:14px;">4 DUNGEON MAPS • BEASTIARY •<br>BOSS TACTICS THAT REALLY WORK</div>
+  <div style="margin-top:26px;">
+    <div class="sub" style="color:#ff8896; margin-bottom:10px;">— YOUR FOES AWAIT —</div>
+    <img class="sprite" src="img/sprite-bramblehorn.png" style="width:72px; margin:0 10px;">
+    <img class="sprite" src="img/sprite-sandWyrm.png" style="width:72px; margin:0 10px;">
+    <img class="sprite" src="img/sprite-morgrath2.png" style="width:104px; margin:0 10px;">
+    <img class="sprite" src="img/sprite-frostRevenant.png" style="width:72px; margin:0 10px;">
+    <img class="sprite" src="img/sprite-bogLurker.png" style="width:72px; margin:0 10px;">
+  </div>
+  <div class="price">VOL. 1 — COLLECTOR'S EDITION — NOT FOR RESALE — PLAYER'S FUND EDITION $0.00</div>
+</div>
+
+<!-- ============================== LORE ============================== -->
+<div class="page dark">
+  <div class="kicker">CHAPTER ZERO</div>
+  <h2>THE LEGEND OF ELDORIA</h2>
+  <div class="cols2">
+    <p>Long, long ago — before the meadow paths were walked, before the first
+    lantern was lit — the land of Eldoria was wild and dark. It was the
+    <b>Crown of Eldoria</b>, forged by the first heroes from three sacred jewels,
+    that brought the balance: the <b>Emerald</b> of the deep forests, the
+    <b>Ruby</b> of the burning sands, and the <b>Sapphire</b> of the frozen peaks.
+    While the Crown sat whole upon its pedestal, crops grew tall, monsters kept
+    to the shadows, and kids could chase fireflies long after bedtime.</p>
+    <p>Then came <b>Morgrath</b>.</p>
+    <p>Once the royal court's cleverest sorcerer, Morgrath grew jealous of a power
+    he could study but never own. One starless night he split the Crown with a
+    single forbidden word, scattering its three shards to temples at the far
+    corners of the realm, each guarded by a monstrous general of his own twisted
+    making. Then he raised the <b>Dark Citadel</b> in the Ashen Wastes and sealed
+    himself behind a barrier no blade, bomb, or battering ram can break.</p>
+    <p>The land dimmed. Slimes oozed into the meadows. Skeletons climbed out of
+    the desert. Wolves of living ice came down from the mountains. And in the
+    little village of <b>Willow</b>, the elder Rowan looked at one brave kid —
+    <b>you</b> — and saw the only hope Eldoria had left.</p>
+    <div class="lorebox"><span class="boxtag">TALES OF ELDORIA</span>
+      "Three shards, three temples, three generals. Reunite the shards and the
+      barrier falls. Then it is you and Morgrath... and may your sword arm be
+      steady, little one." — Elder Rowan
+    </div>
+    <div class="shotwrap"><img class="shot" src="img/shot-intro.png" alt="">
+      <div class="caption">YOUR QUEST BEGINS! Press ENTER to read the prologue.</div></div>
+    <p><b>Your mission, hero:</b></p>
+    <ul>
+      <li>Recover the <b>Emerald Shard</b> from Vinewood Temple</li>
+      <li>Recover the <b>Ruby Shard</b> from the Sandstone Ruins</li>
+      <li>Recover the <b>Sapphire Shard</b> from Glacier Hollow</li>
+      <li>Shatter the barrier, storm the <b>Dark Citadel</b></li>
+      <li>Defeat <b>Morgrath</b> — both of him! — and reforge the Crown</li>
+    </ul>
+  </div>
+  <div class="pagefoot"><span>ELDORIA POWER</span><span>2</span></div>
+</div>
+
+<!-- ============================== GETTING STARTED ============================== -->
+<div class="page">
+  <div class="kicker">TRAINING GROUNDS</div>
+  <h2>GETTING STARTED</h2>
+  <div class="cols2">
+    <h3>CONTROLS OF A CHAMPION</h3>
+    <table>
+      <tr><th>KEY</th><th>WHAT IT DOES</th></tr>
+      <tr><td><b>Arrows / WASD</b></td><td>Move your hero</td></tr>
+      <tr><td><b>SPACE</b> (or Z)</td><td>Swing sword — also talk, read signs, open chests, buy</td></tr>
+      <tr><td><b>X</b></td><td>Use equipped item (bow, bombs, lantern, potion)</td></tr>
+      <tr><td><b>C</b> (or TAB)</td><td>Switch equipped item</td></tr>
+      <tr><td><b>ENTER</b> (or ESC)</td><td>Pause — inventory, equip and SAVE</td></tr>
+      <tr><td><b>M</b></td><td>Mute the music (but why would you?)</td></tr>
+    </table>
+    <div class="tipbox"><span class="boxtag">PRO TIP</span>
+      Talking, reading, opening and buying are all on SPACE — when something is in
+      front of you, SPACE interacts instead of swinging. Walk up close and face it!
+    </div>
+    <h3>SAVING YOUR QUEST</h3>
+    <p>Three save slots live on the title screen. The game <b>auto-saves</b> every
+    time you enter or leave an area, find a treasure, or defeat a boss — and you can
+    save anytime: press <b>ENTER</b>, then <b>S</b>. Falling in battle never erases
+    your progress. Continue from your last save and march right back in!</p>
+    <div class="warnbox"><span class="boxtag">WATCH OUT!</span>
+      Pressing <b>E</b> twice on the title screen ERASES a save slot forever.
+      Guard your slot like you guard your hearts!
+    </div>
+    <h3>READING YOUR HUD</h3>
+    <p>Top of the screen, left to right: your <b>hearts</b> (lose them all and it's
+    Game Over), <b>gems</b>, <b>arrows</b> and <b>bombs</b> (once you own their
+    launchers), <b>potions</b>, dungeon <b>keys</b>, your three <b>shard slots</b>,
+    and the item bound to <b>X</b> in the far corner box.</p>
+    <h3>FIRST THINGS FIRST</h3>
+    <ul>
+      <li>Visit <b>Elder Rowan</b> in the big house — he hands every new hero
+        <b>30 gems</b> to get started. Free money!</li>
+      <li>Cut <b>tall grass and bushes</b> with your sword. Hearts, gems and arrows
+        hide inside. Smash <b>pots</b> too — it's not rude, it's adventuring.</li>
+      <li>Talk to <b>everyone twice</b>. Villagers update their hints as your
+        quest moves forward.</li>
+    </ul>
+    <div class="shotwrap"><img class="shot" src="img/shot-village.png" alt="">
+      <div class="caption">WILLOW VILLAGE — home sweet home. The journey of 80 screens begins with screen one!</div></div>
+  </div>
+  <div class="pagefoot"><span>ELDORIA POWER</span><span>3</span></div>
+</div>
+
+<!-- ============================== PEOPLE ============================== -->
+<div class="page">
+  <div class="kicker">FRIENDS OF THE REALM</div>
+  <h2>PEOPLE OF ELDORIA</h2>
+  <div class="cols2">
+    <div class="item"><img src="img/sprite-elder.png"><div><b>ELDER ROWAN</b>
+      <p>Willow Village's wise leader. Gives you 30 gems and your marching orders.
+      Report to him after every shard!</p></div></div>
+    <div class="item"><img src="img/sprite-shopkeep.png"><div><b>MIRA THE SHOPKEEP</b>
+      <p>Runs the village shop. Potion 40, ten arrows 20, five bombs 25, lantern 60.
+      The lantern is the best 60 gems you will ever spend.</p></div></div>
+    <div class="item"><img src="img/sprite-kid.png"><div><b>PIP</b>
+      <p>Willow's resident expert in being seven years old. Surprisingly useful
+      rumors. Mostly jokes.</p></div></div>
+    <div class="item"><img src="img/sprite-guard.png"><div><b>GUARD TOMAS</b>
+      <p>Watches the north road. Warns you about the mountain pass — listen to him,
+      then go anyway. You're the hero.</p></div></div>
+    <div class="item"><img src="img/sprite-farmer.png"><div><b>FARMER JOSS</b>
+      <p>Tends the southern fields. Knows which way the desert lies, and exactly
+      how many crops the slimes have eaten.</p></div></div>
+    <div class="item"><img src="img/sprite-fisher.png"><div><b>FISHER FINN</b>
+      <p>Lives on the lake's edge. The fairy pond to the northeast? He found it.
+      Ask him about the water.</p></div></div>
+    <div class="item"><img src="img/sprite-hermit.png"><div><b>HERMIT ALDOUS</b>
+      <p>Lives in a cave in the Frostpeaks (enter at the stairs on the high pass).
+      Knows what the cracked boulder at Glacier Hollow needs. BOOM.</p></div></div>
+    <div class="item"><img src="img/sprite-nomad.png"><div><b>NOMAD ZARA</b>
+      <p>Camps in the desert. The eye above the ruins' door? She knows what it's
+      waiting for. (It's an arrow. Bring a bow.)</p></div></div>
+    <div class="item"><img src="img/sprite-witch.png"><div><b>WITCH MORLA</b>
+      <p>Her hut sits at the swamp's edge. Speaks in riddles about a sunken shrine
+      and a blade that "cuts twice as deep." She is not kidding.</p></div></div>
+    <div class="item"><img src="img/sprite-fairy.png"><div><b>FAIRY ARIA</b>
+      <p>Guardian of the healing ponds. Step into her waters and every heart
+      refills. Completely free. Visit often!</p></div></div>
+    <div class="item"><img src="img/sprite-squirrel.png"><div><b>NUTWICK, THE SQUIRREL KING</b>
+      <p>Rules a hidden grove in the western forest behind a wall of bushes.
+      Obsessed with Golden Acorns. Pays ROYALLY for them — see the Classified
+      Section, page 15!</p></div></div>
+    <div class="lorebox"><span class="boxtag">TALES OF ELDORIA</span>
+      Nutwick claims his great-great-grandsquirrel helped forge the Crown by
+      fetching the wood for the bellows. Historians are skeptical. Nutwick is not.
+    </div>
+  </div>
+  <h3>MIRA'S GENERAL STORE — PRICE LIST</h3>
+  <div class="cols2">
+    <div>
+      <table>
+        <tr><th>WARES</th><th>PRICE</th><th>OUR VERDICT</th></tr>
+        <tr><td>Red Potion</td><td>40</td><td>Buy before EVERY boss. No exceptions.</td></tr>
+        <tr><td>10 Arrows</td><td>20</td><td>Cheap. Eye switches don't shoot themselves.</td></tr>
+        <tr><td>5 Bombs</td><td>25</td><td>Walls fear you now.</td></tr>
+        <tr><td>Lantern</td><td>60</td><td>The best gems you'll ever spend. Period.</td></tr>
+      </table>
+      <div class="tipbox"><span class="boxtag">PRO TIP</span>
+        Mira won't sell arrows or bombs until you own the bow or bag — and she
+        won't oversell past your carrying caps. Honest shopkeeping!
+      </div>
+    </div>
+    <div class="shotwrap"><img class="shot" src="img/shot-shop.png" alt="">
+      <div class="caption">THE SHOP — walk up to a pedestal and press SPACE to buy.</div></div>
+  </div>
+  <div class="pagefoot"><span>ELDORIA POWER</span><span>4</span></div>
+</div>
+
+<!-- ============================== WORLD MAP ============================== -->
+<div class="page">
+  <div class="kicker">POSTER PAGE — TAPE THIS TO YOUR WALL</div>
+  <h2>THE WORLD OF ELDORIA</h2>
+  <div class="mapwrap">
+    <img src="img/map-overworld.png" alt="">
+    <div class="marker"        style="left:45%; top:43.75%">1</div>
+    <div class="marker"        style="left:15%; top:31.25%">2</div>
+    <div class="marker"        style="left:85%; top:81.25%">3</div>
+    <div class="marker"        style="left:25%; top:6.25%">4</div>
+    <div class="marker"        style="left:85%; top:6.25%">5</div>
+    <div class="marker purple" style="left:15%; top:81.25%">6</div>
+    <div class="marker blue"   style="left:95%; top:31.25%">7</div>
+    <div class="marker blue"   style="left:65%; top:81.25%">8</div>
+    <div class="marker blue"   style="left:25%; top:68.75%">9</div>
+    <div class="marker blue"   style="left:45%; top:6.25%">10</div>
+    <div class="marker blue"   style="left:55%; top:68.75%">11</div>
+    <div class="marker purple" style="left:5%;  top:43.75%">12</div>
+    <div class="marker purple" style="left:65%; top:18.75%">13</div>
+  </div>
+  <div class="legend">
+    <div><span class="n">1</span><b>Willow Village</b> — start here!</div>
+    <div><span class="n">2</span><b>Vinewood Temple</b> (Dungeon 1)</div>
+    <div><span class="n">3</span><b>Sandstone Ruins</b> (Dungeon 2)</div>
+    <div><span class="n">4</span><b>Glacier Hollow</b> (Dungeon 3)</div>
+    <div><span class="n">5</span><b>The Dark Citadel</b> (Final!)</div>
+    <div><span class="n purple">6</span><b>Sunken Shrine</b> (secret dungeon)</div>
+    <div><span class="n blue">7</span><b>Fairy Pond</b> — free full heal</div>
+    <div><span class="n blue">8</span><b>Oasis Fairy Pond</b> — free heal</div>
+    <div><span class="n blue">9</span><b>Witch Morla's Hut</b></div>
+    <div><span class="n blue">10</span><b>Hermit's Cave</b></div>
+    <div><span class="n blue">11</span><b>Nomad Zara's Tent</b></div>
+    <div><span class="n purple">12</span><b>Nutwick's Hidden Grove</b></div>
+    <div><span class="n purple">13</span><b>The Barrier</b> — 3 shards open it</div>
+  </div>
+  <div class="tipbox" style="margin-top:10px;"><span class="boxtag">PRO TIP</span>
+    The world is 10 screens wide and 8 screens tall. Region borders are sealed by
+    terrain except at the road gateways — if you're walled in, you're missing a path,
+    not a glitch. Follow the dirt roads!
+  </div>
+  <h3>REGION FIELD REPORT</h3>
+  <table>
+    <tr><th>REGION</th><th>DANGER</th><th>WHAT'S OUT THERE</th></tr>
+    <tr><td><b>Meadows</b></td><td>★</td><td>Home turf. Slimes, the village, the crossroads, a bombable gem cave.</td></tr>
+    <tr><td><b>Forest</b></td><td>★★</td><td>Dungeon 1, Nutwick's grove, 3 acorns, two gem chests.</td></tr>
+    <tr><td><b>Lake</b></td><td>★★</td><td>Fairy pond, the bridge island, a bush hiding a Heart Container cave.</td></tr>
+    <tr><td><b>Swamp</b></td><td>★★</td><td>Slow wading, the witch's hut, and the Sunken Shrine below the mire.</td></tr>
+    <tr><td><b>Desert</b></td><td>★★★</td><td>Dungeon 2, the oasis pond, mummies, a Heart Container boulder.</td></tr>
+    <tr><td><b>Frostpeaks</b></td><td>★★★</td><td>Dungeon 3 (bombs required!), the hermit, ice wolves, HC boulder.</td></tr>
+    <tr><td><b>Ashen Wastes</b></td><td>★★★★★</td><td>Behind the barrier. Knights, wizards, lava — and the Citadel.</td></tr>
+  </table>
+  <div class="pagefoot"><span>ELDORIA POWER</span><span>5</span></div>
+</div>
+
+<!-- ============================== ITEMS ============================== -->
+<div class="page">
+  <div class="kicker">GEAR UP, HERO</div>
+  <h2>ITEMS &amp; EQUIPMENT</h2>
+  <div class="cols2">
+    <h3>WEAPONS OF LEGEND</h3>
+    <div class="item"><img src="img/sprite-swordItem.png"><div><b>WOODEN SWORD</b>
+      <p>Your trusty starter. 1 damage. Also cuts grass, bushes and pots —
+      Eldoria's economy runs on landscaping.</p></div></div>
+    <div class="item"><img src="img/sprite-heroSword.png"><div><b>HERO'S BLADE ★SECRET★</b>
+      <p>DOUBLE DAMAGE on everything. Sleeps beneath the swamp in the Sunken
+      Shrine (page 16). Get it before the Citadel and thank us later.</p></div></div>
+    <div class="item"><img src="img/sprite-bow.png"><div><b>HUNTING BOW</b>
+      <p>Found in Vinewood Temple. Fires arrows with X. Comes loaded with 10.
+      The only thing that can hit an eye switch!</p></div></div>
+    <div class="item"><img src="img/sprite-bombItem.png"><div><b>BOMB BAG</b>
+      <p>Found in the Sandstone Ruins. Drops a bomb with X (comes with 5).
+      Blows up cracked walls and cracked boulders. Stand back!</p></div></div>
+    <div class="item"><img src="img/sprite-lantern.png"><div><b>LANTERN</b>
+      <p>Buy it from Mira (60 gems) or find one early in the Sandstone Ruins.
+      Lights torches with X and brightens dark rooms. Required for torch puzzles!</p></div></div>
+    <div class="item"><img src="img/sprite-boots.png"><div><b>POWER BOOTS</b>
+      <p>Found in Glacier Hollow. Run faster forever — and never slip on ice
+      again. The puzzle-solver's best friend.</p></div></div>
+    <h3 style="break-before: column;">SUPPLIES</h3>
+    <div class="item"><img src="img/sprite-potion.png"><div><b>RED POTION</b>
+      <p>Press X to refill ALL hearts. Carry up to 4. Buy before every boss.
+      This is the guide's number one commandment.</p></div></div>
+    <div class="item"><img src="img/sprite-heartContainer.png"><div><b>HEART CONTAINER</b>
+      <p>Your maximum hearts grow by one! Bosses drop them; three more hide in
+      secret caves; one is buried in the Citadel; Nutwick holds another.</p></div></div>
+    <div class="item"><img src="img/sprite-oakCharm.png"><div><b>OAK CHARM ★SECRET★</b>
+      <p>Nutwick's final reward: ALL damage you take is halved. Forever.
+      Worth every acorn.</p></div></div>
+    <div class="item"><img src="img/sprite-smallKey.png"><div><b>SMALL KEY</b>
+      <p>Opens one locked door in the dungeon where you found it. Our maps mark
+      every key so you never waste one.</p></div></div>
+    <div class="item"><img src="img/sprite-bossKey.png"><div><b>BIG KEY</b>
+      <p>Opens the boss door. Guarded accordingly. No big key, no glory.</p></div></div>
+    <div class="item"><img src="img/sprite-shardEmerald.png"><div><b>THE THREE SHARDS</b>
+      <p>Emerald, Ruby, Sapphire. Each dungeon's boss guards one. Collect all
+      three and the Barrier in the Ashen Wastes dissolves on sight.</p></div></div>
+    <div class="tipbox"><span class="boxtag">PRO TIP</span>
+      Carrying caps: 999 gems, 30 arrows, 12 bombs, 4 potions. Mira won't sell you
+      what you can't carry — she's honest like that.
+    </div>
+  </div>
+  <div class="pagefoot"><span>ELDORIA POWER</span><span>6</span></div>
+</div>
+
+<!-- ============================== BESTIARY 1 ============================== -->
+<div class="page">
+  <div class="kicker">KNOW YOUR ENEMY — PART ONE</div>
+  <h2>BEASTIARY OF ELDORIA</h2>
+  <p style="margin-bottom:10px;"><b>HP</b> = sword hits to defeat (Hero's Blade halves it!). <b>DMG</b> = hearts lost on contact.</p>
+  <div class="cols2">
+    <h3>FIELDS &amp; FORESTS</h3>
+    <div class="beast"><img src="img/sprite-slime.png"><div><b>SLIME</b>
+      <span class="stats">HP 1 • DMG ½ • hops</span>
+      <p>Eldoria's welcome committee. One bonk. Practice your timing here.</p></div></div>
+    <div class="beast"><img src="img/sprite-redSlime.png"><div><b>RED SLIME</b>
+      <span class="stats">HP 2 • DMG ½ • hops fast</span>
+      <p>Spicier cousin. Hops with less downtime — strike between bounces.</p></div></div>
+    <div class="beast"><img src="img/sprite-bat.png"><div><b>BAT</b>
+      <span class="stats">HP 1 • DMG ½ • flies</span>
+      <p>Weaves over pits and water. Wait for the swoop, then swing.</p></div></div>
+    <div class="beast"><img src="img/sprite-spitter.png"><div><b>SPITTER</b>
+      <span class="stats">HP 2 • DMG ½ • shoots seeds</span>
+      <p>A rude plant. Sidestep its seeds and rush it — it barely moves.</p></div></div>
+    <div class="beast"><img src="img/sprite-beetle.png"><div><b>BEETLE</b>
+      <span class="stats">HP 2 • DMG 1 • charges</span>
+      <p>Flashes, then dashes in a straight line. Step aside like a matador, then
+      poke it while it's dizzy.</p></div></div>
+    <h3>SANDS &amp; BONES</h3>
+    <div class="beast"><img src="img/sprite-scarab.png"><div><b>SCARAB</b>
+      <span class="stats">HP 2 • DMG 1 • charges fast</span>
+      <p>The beetle's track-team cousin. Bigger sidestep. Same dizzy poke.</p></div></div>
+    <div class="beast"><img src="img/sprite-skeleton.png"><div><b>SKELETON</b>
+      <span class="stats">HP 3 • DMG 1 • chases</span>
+      <p>Relentless walker. Backpedal and slash — your reach beats his bones.</p></div></div>
+    <div class="beast"><img src="img/sprite-skeletonArcher.png"><div><b>SKELETON ARCHER</b>
+      <span class="stats">HP 2 • DMG ½ • shoots bones</span>
+      <p>Keeps its distance and plinks at you. Zigzag in, or return fire with
+      your own bow. Drops arrows!</p></div></div>
+    <div class="beast"><img src="img/sprite-mummy.png"><div><b>MUMMY</b>
+      <span class="stats">HP 5 • DMG 1 • slow tank</span>
+      <p>Slow, tough, and patient. Hit-and-run four times — never trade hits.
+      Sometimes drops bombs!</p></div></div>
+    <h3>FROZEN PEAKS</h3>
+    <div class="beast"><img src="img/sprite-iceSlime.png"><div><b>ICE SLIME</b>
+      <span class="stats">HP 2 • DMG 1 • hops</span>
+      <p>A slime that learned winter. Hits harder than its meadow kin.</p></div></div>
+    <div class="beast"><img src="img/sprite-iceWolf.png"><div><b>ICE WOLF</b>
+      <span class="stats">HP 3 • DMG 1 • chases FAST</span>
+      <p>Fastest chaser in the game. Don't run — turn and meet it with steel.</p></div></div>
+    <div class="beast"><img src="img/sprite-frostWisp.png"><div><b>FROST WISP</b>
+      <span class="stats">HP 2 • DMG ½ • flies + shoots ice</span>
+      <p>Floaty and annoying. Its shards travel in straight lines. Strafe, close
+      distance, swat.</p></div></div>
+  </div>
+  <div class="pagefoot"><span>ELDORIA POWER</span><span>7</span></div>
+</div>
+
+<!-- ============================== BESTIARY 2 ============================== -->
+<div class="page">
+  <div class="kicker">KNOW YOUR ENEMY — PART TWO</div>
+  <h2>THE DARK LEGION &amp; THE GENERALS' GUARDS</h2>
+  <div class="cols2">
+    <h3>MORGRATH'S ELITE</h3>
+    <div class="beast"><img src="img/sprite-knight.png"><div><b>DARK KNIGHT</b>
+      <span class="stats">HP 6 • DMG 1 • chases • ARROW-PROOF</span>
+      <p>Armor shrugs off arrows entirely — you'll hear the clank. Sword and
+      bombs only. Circle behind and chip away.</p></div></div>
+    <div class="beast"><img src="img/sprite-wizard.png"><div><b>WIZARD</b>
+      <span class="stats">HP 4 • DMG 1 • teleports + bolts</span>
+      <p>Blinks near you, fires, blinks away. The moment it appears is your
+      moment — be swinging where it lands.</p></div></div>
+    <div class="beast"><img src="img/sprite-eyeSentry.png"><div><b>EYE SENTRY</b>
+      <span class="stats">HP 3 • DMG 0 touch • turret</span>
+      <p>A stone eye that fires only when you line up with it. Approach
+      diagonally and it never gets a shot. Harmless to touch!</p></div></div>
+    <h3>MINIBOSSES — THE GENERALS' GUARDS</h3>
+    <div class="beast big"><img src="img/sprite-bigSlime.png"><div><b>BIG SLIME</b>
+      <span class="stats">HP 10 • DMG 1 • Vinewood Temple</span>
+      <p>A slime the size of a shed, guarding the Bow. Huge hops, huge landing
+      lag. Punish every landing and keep your feet moving.</p></div></div>
+    <div class="beast big"><img src="img/sprite-mummyKnight.png"><div><b>MUMMY KNIGHT</b>
+      <span class="stats">HP 14 • DMG 1½ • Sandstone Ruins</span>
+      <p>Hits like a falling pyramid. It telegraphs its dash — bait it, dodge it,
+      then carve while it recovers. Patience wins.</p></div></div>
+    <div class="beast big"><img src="img/sprite-alphaWolf.png"><div><b>ALPHA WOLF</b>
+      <span class="stats">HP 12 • DMG 1 • Glacier Hollow</span>
+      <p>Charges across the ice where YOU can't turn — stand near a wall, dodge
+      late, and let it crash. Guards the Power Boots.</p></div></div>
+    <div class="beast big"><img src="img/sprite-bogLurker.png"><div><b>BOG LURKER</b>
+      <span class="stats">HP 12 • DMG 1 • Sunken Shrine</span>
+      <p>Vanishes into the murk and pops up beside you spitting mud. Listen for
+      the splash, swing where it surfaces. Guards the Hero's Blade!</p></div></div>
+    <div class="warnbox"><span class="boxtag">WATCH OUT!</span>
+      Defeated minibosses stay defeated — but ordinary monsters return every time
+      you re-enter a screen. Great for farming hearts and gems; less great when
+      you're at half a heart. Know when to run!
+    </div>
+    <div class="tipbox"><span class="boxtag">PRO TIP</span>
+      Every enemy can drop hearts, gems, arrows or bombs. Tougher enemies drop
+      better loot. A mummy hallway is a bomb shop with extra steps.
+    </div>
+  </div>
+  <div class="pagefoot"><span>ELDORIA POWER</span><span>8</span></div>
+</div>
+
+<!-- ============================== CH1: MEADOWS/FOREST ============================== -->
+<div class="page">
+  <div class="kicker">WALKTHROUGH — CHAPTER ONE</div>
+  <h2>FROM VILLAGE TO VINEWOOD</h2>
+  <div class="cols2">
+    <p><b>Step one:</b> see Elder Rowan (30 free gems!), read every sign, and mow
+    the village lawns for pocket change. When your courage is topped up, take the
+    west road out of the village square.</p>
+    <p><b>Step two:</b> the crossroads. South lie the farms; keep west through the
+    meadows. Slimes and the odd red slime patrol here — perfect sword practice.
+    Work toward the forest border two screens west.</p>
+    <p><b>Step three:</b> the forest. Tall trees, winding paths, spitters lobbing
+    seeds from the undergrowth, and bats in the canopy. Head for the
+    <b>north-west clearing</b> where stone statues flank a mossy staircase:
+    <b>Vinewood Temple</b>.</p>
+    <div class="shotwrap"><img class="shot" src="img/shot-forest-temple.png" alt="">
+      <div class="caption">VINEWOOD TEMPLE — down the stairs and into Dungeon 1!</div></div>
+    <div class="tipbox"><span class="boxtag">PRO TIP</span>
+      Before the temple: stock up! 20 gems buys 10 arrows — useless now (no bow
+      yet), but a <b>potion (40)</b> in your pocket turns a scary first dungeon
+      into a comfy one. Short on gems? There's a 20-gem chest behind bushes in the
+      far north-west forest nook, and a 50-gem chest in the south-west woods.
+    </div>
+    <h3>SIDE QUEST: THE SQUIRREL KING</h3>
+    <p>In the forest's western clearing, a suspicious wall of bushes hides a grove.
+    Cut through and meet <b>NUTWICK, KING OF SQUIRRELS</b>, who pays out for
+    Golden Acorns at 4, 8 and 12 collected. There's an acorn lying in his own
+    grove. Take it. He won't notice. (He will absolutely notice. He counts them
+    daily. Take it anyway.)</p>
+    <div class="shotwrap"><img class="shot" src="img/shot-nutwick-grove.png" alt="">
+      <div class="caption">THE HIDDEN GROVE — His Royal Fluffiness awaits your tribute.</div></div>
+    <div class="lorebox"><span class="boxtag">TALES OF ELDORIA</span>
+      Why are the acorns golden? Morgrath's barrier leaks raw magic on the wind.
+      It lands on ordinary acorns. Nutwick considers this the one good thing the
+      sorcerer ever did.
+    </div>
+  </div>
+  <div class="pagefoot"><span>ELDORIA POWER</span><span>9</span></div>
+</div>
+
+<!-- ============================== CH2: DUNGEON 1 ============================== -->
+<div class="page">
+  <div class="kicker">WALKTHROUGH — CHAPTER TWO</div>
+  <h2>DUNGEON 1: VINEWOOD TEMPLE</h2>
+  <div class="mapwrap" style="width:79%; margin-left:auto; margin-right:auto;"><img src="img/map-dungeon1.png" alt=""></div>
+  <div class="caption" style="margin-bottom:8px; width:79%; margin-left:auto; margin-right:auto;">FULL TEMPLE MAP — entry at bottom-center. Boss waits top-center!</div>
+  <div class="cols2">
+    <ol style="margin:0 0 8px; padding-left:16px;">
+      <li><b>Entry hall:</b> push the stone <b>block onto the floor plate</b> to open
+        the north door. Your first puzzle — the block slides one tile per shove.</li>
+      <li><b>South-west room:</b> clear every monster and a <b>Small Key #1</b>
+        chest appears. Sealed doors with monsters behind them work like this all
+        game: clear the room, claim the prize.</li>
+      <li><b>The hub:</b> note the <b>eye switch</b> staring at you. It wants an
+        arrow you don't have yet. East first!</li>
+      <li><b>Locked door (key #1) east:</b> the <b>BIG SLIME</b> miniboss guards a
+        golden big chest — the <b>HUNTING BOW</b> (with 10 arrows). Dodge the hops,
+        strike the landings.</li>
+      <li><b>Supply room</b> (north of the miniboss): plates + a fight open the way
+        to spare arrows and gems. Stock up.</li>
+      <li><b>Back to the hub:</b> arrow the <b>eye switch</b> — the west door grinds
+        open. Small Key #2 lives in the south-west wing.</li>
+      <li><b>North-west vault:</b> the <b>BIG KEY</b>. Now the ominous boss door in
+        the hub's north wall will open.</li>
+    </ol>
+    <div class="secretbox"><span class="boxtag">SECRET</span>
+      The south-east bonus room has a <b>cracked wall</b>. You can't open it yet —
+      remember it, and come back after Dungeon 2 with bombs for a 50-gem payday.
+    </div>
+    <h3 style="break-before: column;">BOSS: BRAMBLEHORN</h3>
+    <div class="shotwrap"><img class="shot" src="img/shot-boss-bramblehorn.png" alt="">
+      <div class="caption">BRAMBLEHORN — 14 HP of angry beetle. Wait for the WALL CRASH!</div></div>
+    <p>The temple's general is a beetle the size of a wagon, and your sword
+    <b>bounces right off its shell</b>. Here's the trick the temple priests carved
+    into the walls: <b>it can't steer</b>. Stand in its line, wait for the
+    telegraph flash, hop aside — and when it slams into the wall, it's stunned
+    and soft for a full three seconds. <b>That's your window.</b> Slash, retreat,
+    repeat. Reward: <b>Heart Container + THE EMERALD SHARD!</b></p>
+    <div class="tipbox"><span class="boxtag">PRO TIP</span>
+      Take the glowing portal home — and visit Elder Rowan. Everyone in the
+      village has new things to say after each shard!
+    </div>
+  </div>
+  <div class="pagefoot"><span>ELDORIA POWER</span><span>10</span></div>
+</div>
+
+<!-- ============================== CH3: DUNGEON 2 ============================== -->
+<div class="page">
+  <div class="kicker">WALKTHROUGH — CHAPTER THREE</div>
+  <h2>DUNGEON 2: SANDSTONE RUINS</h2>
+  <div class="cols2">
+    <p><b>Getting in:</b> cross the south meadows into the desert and head for the
+    great ruin in the south-east. The door is sealed — but a stone <b>eye</b>
+    watches from the facade. You have a bow now. You know what to do.</p>
+    <div class="shotwrap"><img class="shot" src="img/shot-d2-entrance.png" alt="">
+      <div class="caption">ONE ARROW OPENS THE WAY. Zara tried everything else for years.</div></div>
+    <ol style="margin:0 0 8px; padding-left:16px;">
+      <li><b>Entry:</b> go <b>WEST first</b> — a lantern sits in a chest in plain
+        sight. (Already bought one from Mira? The chest pays gems instead.)</li>
+      <li><b>East kill room:</b> clear it for <b>Key #1</b>, then light the
+        <b>two torches</b> to unseal the north door.</li>
+      <li><b>MUMMY KNIGHT</b> miniboss: bait the dash, punish the recovery.
+        Victory opens the vault — the golden chest holds the <b>BOMB BAG</b>
+        (with 5 bombs).</li>
+      <li><b>Key #1</b> unlocks the entry's north door — the hub. Twin eye
+        switches here open a handy shortcut east.</li>
+      <li><b>West wing:</b> push-blocks onto plates plus a torch open the way to
+        the <b>BIG KEY vault</b>. <b>Key #2</b> is in this wing too, in a spike
+        nook — careful feet!</li>
+      <li><b>North wing (dark!):</b> lantern up. A pit maze guards <b>Key #3</b>,
+        and a <b>cracked wall</b> here must be bombed to push deeper.</li>
+      <li><b>Gauntlet east, then the boss door.</b> Potion check: got one?</li>
+    </ol>
+    <div class="secretbox"><span class="boxtag">SECRET</span>
+      FOUR more cracked walls hide bonus caches in this dungeon — west of the entry,
+      in the big-key vault, in the gauntlet, and beside the bomb vault. When in
+      doubt, bomb the suspicious wall. The ruins respect demolition.
+    </div>
+    <h3>BOSS: VESPER THE SAND WYRM</h3>
+    <div class="shotwrap"><img class="shot" src="img/shot-boss-sandwyrm.png" alt="">
+      <div class="caption">20 HP OF BURROWING NIGHTMARE. Only the surfaced wyrm can be hurt!</div></div>
+    <p>The arena floor churns. The wyrm is <b>untouchable underground</b> — watch
+    the sand bulge, step away from the rising spot, and dodge the spit. Then it
+    <b>surfaces for five long seconds: attack!</b> Sword if you're brave, arrows
+    if you're sensible. Reward: <b>Heart Container + THE RUBY SHARD!</b></p>
+    <div class="warnbox"><span class="boxtag">WATCH OUT!</span>
+      Out of bombs mid-dungeon? Mummies drop them, and Mira sells five for 25.
+      Never bomb your last wall without a plan, hero.
+    </div>
+  </div>
+  <div class="pagefoot"><span>ELDORIA POWER</span><span>11</span></div>
+</div>
+
+<!-- ============================== CH4: DUNGEON 3 ============================== -->
+<div class="page">
+  <div class="kicker">WALKTHROUGH — CHAPTER FOUR</div>
+  <h2>DUNGEON 3: GLACIER HOLLOW</h2>
+  <div class="cols2">
+    <p><b>Getting in:</b> take the mountain pass north (Tomas will fret — wave
+    cheerfully). On the high snowfield, a <b>cracked boulder</b> plugs a cave
+    mouth. One bomb later, Glacier Hollow yawns open.</p>
+    <div class="shotwrap"><img class="shot" src="img/shot-d3-boulder.png" alt="">
+      <div class="caption">THE BOULDER. Hermit Aldous has been staring at it for 20 years. You brought bombs.</div></div>
+    <p><b>Ice rules:</b> on blue ice you <b>slide</b> — steer gently, plan ahead.
+    Blocks pushed on ice <b>glide until they hit something</b>. Every sokoban
+    puzzle here is built on that. (Mess one up? Leave the room and return —
+    blocks reset. The glacier is forgiving. The wolves are not.)</p>
+    <div class="shotwrap"><img class="shot" src="img/shot-ice-sokoban.png" alt="">
+      <div class="caption">SOKOBAN ON ICE — line the block up so an ice block stops it ON the plate.</div></div>
+    <ol style="margin:0 0 8px; padding-left:16px;">
+      <li><b>West of entry:</b> the ice-slide maze. Ride it to <b>Key #1</b>.</li>
+      <li><b>East of entry:</b> wolf den (clear-sealed) into the <b>sokoban on
+        ice</b> — plates open a pocket holding <b>Key #2</b>.</li>
+      <li><b>Hub</b> (locked door #1): a <b>cracked wall</b> in the hub itself
+        hides <b>Key #3</b>. Bombs again!</li>
+      <li><b>West wing:</b> triple-plate sokoban, then the sentinel vault — clear
+        the eye sentries for the <b>BIG KEY</b>. Approach sentries diagonally!</li>
+      <li><b>East wing:</b> the three flames hall (lantern!) leads to the
+        <b>ALPHA WOLF</b> arena. Let it crash into walls, then strike. The golden
+        chest holds the <b>POWER BOOTS</b> — faster forever, and no more
+        slipping on ice.</li>
+      <li><b>North crevasse</b> (optional): pits, sentries, treasure. Boots help.</li>
+      <li><b>Hub north:</b> the boss door.</li>
+    </ol>
+    <h3>BOSS: KARN THE FROST REVENANT</h3>
+    <div class="shotwrap"><img class="shot" src="img/shot-boss-frostrevenant.png" alt="">
+      <div class="caption">22 HP, TELEPORTS, SUMMONS. The busiest fight yet — stay moving!</div></div>
+    <p>A frozen sorcerer who <b>blinks around the arena</b> hurling fans of ice.
+    Halfway down, he calls <b>frost wisps</b> to the fight — swat them fast or
+    drown in shards. He's vulnerable whenever he's visible: chase the
+    materialize, land two hits, dodge the barrage, repeat. Reward:
+    <b>Heart Container + THE SAPPHIRE SHARD!</b></p>
+  </div>
+  <div class="pagefoot"><span>ELDORIA POWER</span><span>12</span></div>
+</div>
+
+<!-- ============================== MAP APPENDIX ============================== -->
+<div class="page">
+  <div class="kicker">POSTER PAGE — THE CARTOGRAPHER'S SPREAD</div>
+  <h2>DUNGEON MAPS: RUINS &amp; HOLLOW</h2>
+  <h3>SANDSTONE RUINS — 11 ROOMS OF TOMB</h3>
+  <div class="mapwrap"><img src="img/map-dungeon2.png" alt=""></div>
+  <div class="caption" style="margin-bottom:12px;">Entry bottom row, second from left. Lantern chest LEFT of entry — grab it first! Boss arena: top-right. Dark rooms shown lit for your convenience. You're welcome.</div>
+  <h3>GLACIER HOLLOW — 11 ROOMS OF ICE</h3>
+  <div class="mapwrap"><img src="img/map-dungeon3.png" alt=""></div>
+  <div class="caption" style="margin-bottom:10px;">Entry bottom row, second from left. Ice-slide maze to its LEFT, wolf den + sokoban RIGHT. Boss: top row, second from left. Spot the cracked hub wall hiding Key #3!</div>
+  <div class="tipbox"><span class="boxtag">PRO TIP</span>
+    Reading our maps: gold dots = pots (smash!), small chests = keys and gems,
+    GOLD chests = dungeon treasures, dark doorways = doors that need keys,
+    switches and flames. If a wall looks cracked, it is. Bombs fix everything.
+  </div>
+  <div class="pagefoot"><span>ELDORIA POWER</span><span>13</span></div>
+</div>
+
+<!-- ============================== CH5: BARRIER + CITADEL ============================== -->
+<div class="page dark">
+  <div class="kicker">WALKTHROUGH — CHAPTER FIVE</div>
+  <h2>THE BARRIER &amp; THE DARK CITADEL</h2>
+  <div class="cols2">
+    <p>Three shards sing in your pack. East of the mountain pass, the Ashen
+    Wastes begin — dead trees, boiling lava, and Morgrath's shimmering
+    <b>Barrier</b>. Walk up to it with all three shards and watch it
+    <b>dissolve like sugar in rain</b>. No button needed. You earned this.</p>
+    <div class="shotwrap"><img class="shot" src="img/shot-barrier.png" alt="">
+      <div class="caption">THE BARRIER FALLS — the Wastes are open. So is the worst place in the world.</div></div>
+    <div class="warnbox"><span class="boxtag">WATCH OUT!</span>
+      The Wastes are end-game country: dark knights (ARROW-PROOF!), wizards,
+      skeletons. Lava walls burn on touch. There's a 50-gem cache and a 5-bomb
+      cache hidden out here for heroes who explore — see the Classified Section.
+    </div>
+    <p>The <b>Dark Citadel</b> looms in the north-east. Checklist before the
+    gates: <b>Hero's Blade</b> (page 16!), <b>4 potions</b>, full bombs and
+    arrows, and every Heart Container you can claim. This place is a fortress,
+    a puzzle box and a final exam all at once.</p>
+    <div class="mapwrap"><img src="img/map-citadel.png" alt=""></div>
+    <div class="caption" style="margin-bottom:8px;">THE DARK CITADEL — entry at bottom-center; Morgrath's throne crowns the top.</div>
+    <h3>THE SAFE ROUTE (4 KEYS, ZERO REGRETS)</h3>
+    <ol style="margin:0 0 8px; padding-left:16px;">
+      <li><b>Key #1:</b> the gauntlet room east of the entry — seal yourself in,
+        clear it out.</li>
+      <li><b>Key #2:</b> the crypt west of the entry. Dark room — lantern up.</li>
+      <li>Key #1 opens the entry's north door — the <b>hub</b>.</li>
+      <li><b>Key #3:</b> west of the hub past the sokoban. <b>Key #4:</b> the war
+        room east of the pre-boss hall.</li>
+      <li><b>BIG KEY:</b> the <b>lava gallery</b> (north-west) — eye switches
+        across the lava open the path. Don't hug the lava walls; they burn.</li>
+      <li>Hub north → sanctum → <b>throne room</b>.</li>
+    </ol>
+    <div class="tipbox"><span class="boxtag">PRO TIP</span>
+      Every key in the Citadel can be reached WITHOUT spending one — so you can
+      never lock yourself out. The architect was evil, not cruel.
+    </div>
+    <div class="secretbox"><span class="boxtag">SECRET</span>
+      The torch room east of the hub hides a <b>bombable alcove</b> — inside is
+      the Citadel's own <b>HEART CONTAINER</b>. Do not skip this.
+    </div>
+  </div>
+  <div class="pagefoot"><span>ELDORIA POWER</span><span>14</span></div>
+</div>
+
+<!-- ============================== CH6: MORGRATH ============================== -->
+<div class="page dark">
+  <div class="kicker">WALKTHROUGH — FINAL CHAPTER</div>
+  <h2>MORGRATH: THE LAST BATTLE</h2>
+  <div class="cols2">
+    <h3>PHASE ONE — THE SORCERER</h3>
+    <div class="shotwrap"><img class="shot" src="img/shot-boss-morgrath.png" alt="">
+      <div class="caption">PHASE 1 — the wizard duel. He blinks, he barrages, he gloats.</div></div>
+    <p>Morgrath fights like his wizards, only meaner: <b>teleport, barrage,
+    rest, repeat</b>. The rhythm is your friend. When he materializes, he needs
+    a moment to wind up — that moment belongs to your blade. Two clean hits per
+    window, then break away before the bolts fan out. Keep your hearts above
+    half: phase one is a warm-up, and you want to enter what's next strong.</p>
+    <h3>PHASE TWO — THE DEMON</h3>
+    <div class="shotwrap"><img class="shot" src="img/shot-boss-morgrath2.png" alt="">
+      <div class="caption">HE WASN'T KIDDING ABOUT THE FORBIDDEN MAGIC. 26 HP of doom.</div></div>
+    <p>Drop the sorcerer and the throne room <b>shakes</b>... and what stands up
+    is no longer a man. Demon Morgrath fills the room: <b>fireball fans</b>,
+    <b>charging rushes</b> that crack the floor, and <b>bat swarms</b> when his
+    health runs low. The plan:</p>
+    <ul>
+      <li><b>Charges:</b> he crashes like Bramblehorn — sidestep and slash the
+        recovery. Old tricks beat new demons.</li>
+      <li><b>Fireball fans:</b> the gaps are generous. Walk — don't panic-run —
+        through them. Boots help.</li>
+      <li><b>Bats:</b> kill them THE SECOND they appear, or they'll nickel-and-dime
+        your potion stash away.</li>
+      <li><b>Potions:</b> drink at 2 hearts. A held potion heals zero damage.</li>
+    </ul>
+    <p>When the last hit lands, the darkness peels away, the Crown reforges, and
+    Eldoria gets its sky back. <b>You did that.</b> Roll credits, hero — and
+    yes, your save keeps going afterward, with every secret still out there to
+    find.</p>
+    <div class="lorebox"><span class="boxtag">TALES OF ELDORIA</span>
+      They say the throne room's carpet runs the exact path the first heroes
+      walked to place the Crown. Morgrath kept it. Even monsters miss being
+      part of a better story.
+    </div>
+  </div>
+  <div class="pagefoot"><span>ELDORIA POWER</span><span>15</span></div>
+</div>
+
+<!-- ============================== SECRETS 1 ============================== -->
+<div class="page">
+  <div class="kicker">★ CLASSIFIED ★ TOP SECRET ★ NO PEEKING ★</div>
+  <h2>THE GOLDEN ACORN REGISTRY</h2>
+  <div class="cols2">
+    <p>Twelve Golden Acorns hide across Eldoria. <b>NUTWICK PAYS:</b>
+    4 acorns → <b>100 gems</b>. 8 acorns → <b>HEART CONTAINER</b>. All 12 →
+    the <b>OAK CHARM</b> (all damage halved, forever). Here is every single one.
+    You're welcome.</p>
+    <table>
+      <tr><th>#</th><th>WHERE</th><th>HOW</th></tr>
+      <tr><td>1</td><td>North meadow bluffs (NW of the village)</td><td>Tucked in a bush pocket — cut your way in</td></tr>
+      <tr><td>2</td><td>South fields, far SE corner</td><td>Behind the farm rows</td></tr>
+      <tr><td>3</td><td>Forest, NW alcove</td><td>Bush-sealed nook by the gem chest</td></tr>
+      <tr><td>4</td><td>Nutwick's own grove</td><td>Right under his nose. He counts them. Do it anyway</td></tr>
+      <tr><td>5</td><td>Forest gem cave</td><td>BOMB the boulder in the SE forest, acorn inside the cave</td></tr>
+      <tr><td>6</td><td>Lake NW shore</td><td>Bush cluster near the reeds</td></tr>
+      <tr><td>7</td><td>Lake bridge island</td><td>Cross the bridge to the island's heart</td></tr>
+      <tr><td>8</td><td>Frostpeaks, NW ledge</td><td>Bush-sealed snowy shelf</td></tr>
+      <tr><td>9</td><td>Frostpeaks, NE nook</td><td>Near the 20-gem chest peak</td></tr>
+      <tr><td>10</td><td>Deep swamp island (SW corner of the world)</td><td>Wade the shallows south</td></tr>
+      <tr><td>11</td><td>NE desert</td><td>Behind the cactus line</td></tr>
+      <tr><td>12</td><td>SW dunes</td><td>Pocket in the rocks near the desert road</td></tr>
+    </table>
+    <div class="tipbox"><span class="boxtag">PRO TIP</span>
+      The HUD doesn't track acorns — the PAUSE screen does (ENTER). Found
+      one? It's saved forever the moment you grab it.
+    </div>
+    <h3>THE HEART CONTAINER TRAIL</h3>
+    <p>Beyond the three boss hearts, FOUR more await:</p>
+    <ul>
+      <li><b>Mountain cave:</b> bomb the cracked boulder in the far NW corner of
+        the Frostpeaks.</li>
+      <li><b>Desert cave:</b> bomb the boulder in the desert's far SE corner.</li>
+      <li><b>Lake cave:</b> the ONLY cut-secret in Eldoria — a bush on the lake's
+        south shore hides a staircase. Slash everything green.</li>
+      <li><b>Citadel alcove:</b> bombable wall in the torch room (page 13).</li>
+      <li><b>Nutwick</b> hands over one more at 8 acorns!</li>
+    </ul>
+    <p>Collect everything and your life bar hits <b>11 hearts</b>. Morgrath
+    will weep.</p>
+  </div>
+  <div class="pagefoot"><span>ELDORIA POWER</span><span>16</span></div>
+</div>
+
+<!-- ============================== SECRETS 2 ============================== -->
+<div class="page">
+  <div class="kicker">★ CLASSIFIED ★ THE DEEPEST SECRET ★</div>
+  <h2>THE SUNKEN SHRINE &amp; THE HERO'S BLADE</h2>
+  <div class="cols2">
+    <p>Witch Morla's riddle is real. South-west through the swamp — wade the
+    shallows, mind the deep water — ancient stones rise from the mire. The
+    staircase between them sinks into the <b>SUNKEN SHRINE</b>, the one dungeon
+    no quest requires... and the one every hero should finish.</p>
+    <div class="shotwrap"><img class="shot" src="img/shot-shrine-entrance.png" alt="">
+      <div class="caption">OLD STONES DREAM BELOW THE MIRE. Bring your lantern — only its light wakes them.</div></div>
+    <div class="mapwrap"><img src="img/map-shrine.png" alt=""></div>
+    <div class="caption" style="margin-bottom:8px;">ALL FOUR ROOMS — small dungeon, giant reward.</div>
+    <ol style="margin:0 0 8px; padding-left:16px;">
+      <li><b>Antechamber:</b> block on the plate AND both torches lit (lantern!)
+        opens the north door.</li>
+      <li><b>Drowned cellar</b> (east, optional): clear the fight for 50 gems.</li>
+      <li><b>Hall of echoing lights:</b> two block-plates, one torch. The east
+        door grinds open.</li>
+      <li><b>The arena:</b> <b>BOG LURKER</b>. Swing where it surfaces. Its
+        treasure: the <b>HERO'S BLADE — double damage on every swing,
+        forever.</b></li>
+    </ol>
+    <h3>MORE CLASSIFIED INTEL</h3>
+    <ul>
+      <li><b>Fairy ponds</b> (lake NE + desert oasis): walk into the water,
+        leave with full hearts. Free. Reusable. The pros plan routes around them.</li>
+      <li><b>Gem caves:</b> bomb-boulders in the central meadows and SE forest
+        each hide a 50-gem chest (the forest one has acorn #5!).</li>
+      <li><b>Wastes caches:</b> 50 gems in the NW ruin pocket; FIVE bombs in the
+        NE — restock before the Citadel without walking home.</li>
+      <li><b>Chest patrol:</b> 20-gem chests hide in the meadow bluffs, the south
+        hollow, the forest nook, the lake cove, the peaks and the swamp; 50-gem
+        chests in the SW forest and east desert; an arrow cache sits in the
+        north desert. Our world map shows the regions — happy hunting!</li>
+      <li><b>Dungeon 1 revisit:</b> that cracked wall in Vinewood's SE room?
+        50 gems say you came back with bombs.</li>
+    </ul>
+    <div class="shotwrap"><img class="shot" src="img/shot-fairy-pond.png" alt="">
+      <div class="caption">FAIRY ARIA'S POND — "Rest, little hero. The water remembers you."</div></div>
+  </div>
+  <div class="pagefoot"><span>ELDORIA POWER</span><span>17</span></div>
+</div>
+
+<!-- ============================== CHECKLIST / BACK ============================== -->
+<div class="page dark">
+  <div class="kicker">FOR 100% HEROES ONLY</div>
+  <h2>THE COMPLETIONIST'S CHECKLIST</h2>
+  <div class="cols2">
+    <table>
+      <tr><th>✓</th><th>DEED</th></tr>
+      <tr><td>☐</td><td>Emerald Shard (Vinewood Temple)</td></tr>
+      <tr><td>☐</td><td>Ruby Shard (Sandstone Ruins)</td></tr>
+      <tr><td>☐</td><td>Sapphire Shard (Glacier Hollow)</td></tr>
+      <tr><td>☐</td><td>Hunting Bow • Bomb Bag • Lantern • Power Boots</td></tr>
+      <tr><td>☐</td><td>HERO'S BLADE from the Sunken Shrine</td></tr>
+      <tr><td>☐</td><td>All 12 Golden Acorns</td></tr>
+      <tr><td>☐</td><td>Oak Charm (Nutwick, 12 acorns)</td></tr>
+      <tr><td>☐</td><td>All 7 bonus Heart Containers (11 hearts total)</td></tr>
+      <tr><td>☐</td><td>Every cracked wall bombed (D1 revisit too!)</td></tr>
+      <tr><td>☐</td><td>Both fairy ponds discovered</td></tr>
+      <tr><td>☐</td><td>Talked to every single villager after the ending</td></tr>
+      <tr><td>☐</td><td>MORGRATH DEFEATED — CROWN REFORGED</td></tr>
+    </table>
+    <div class="shotwrap"><img class="shot" src="img/shot-victory.png" alt="">
+      <div class="caption">THE ENDING — your time, your acorns, your hearts. Frame it.</div></div>
+    <div class="bigbadge">98% — "AN INSTANT CLASSIC" — ELDORIA WEEKLY</div>
+    <p style="margin-top:10px;">"I have reviewed kingdoms, festivals, and one
+    unusually ambitious turnip. This quest outranks them all."
+    — <i>Pip, age 7, Willow Village Gazette</i></p>
+    <p>"The boulder. THE BOULDER. Twenty years!" — <i>Hermit Aldous, five stars</i></p>
+    <p>"Chit-chit. CHIT-CHIT-CHIT!" — <i>His Royal Fluffiness King Nutwick,
+    translated from the original Squirrel</i></p>
+    <div class="lorebox"><span class="boxtag">UNTIL NEXT TIME</span>
+      Some say that on quiet nights, the reforged Crown hums an old song — and
+      that far beyond the eastern lake, something hums back. But that, brave
+      hero, is a legend for another day...
+    </div>
+    <p style="font-family:'PressStart'; font-size:7px; margin-top:14px; color:#ffcb05;">
+      THE SHATTERED CROWN — OFFICIAL PLAYER'S GUIDE • MADE WITH ❤ FOR ONE BRAVE
+      HERO • PLAY MORE GAMES WITH YOUR DAD</p>
+  </div>
+  <div class="pagefoot"><span>ELDORIA POWER</span><span>18</span></div>
+</div>
+
+</body>
+</html>
