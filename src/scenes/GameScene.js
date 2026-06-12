@@ -317,16 +317,16 @@ window.GameScene = class GameScene extends Phaser.Scene {
     if (room.boss && !Flags.get(`boss_${mapId}`)) this.spawnBoss(room.boss);
     else if (room.boss && Flags.get(`boss_${mapId}`) && mapId !== 'citadel') {
       // boss already beaten: re-offer any uncollected rewards + the portal home
+      const taken = new Set();
       const bx = room.boss.x * T + 8, by = room.boss.y * T + 8;
       const shard = DUNGEON_SHARDS[mapId];
       if (shard && !Flags.get('pickup_shard_' + mapId) && GS.shards.indexOf(shard) < 0) {
-        this.spawnPickup(bx, by, { item: shard }, { persistentId: 'shard_' + mapId });
+        this.spawnPickup(bx, by, { item: shard }, { persistentId: 'shard_' + mapId, taken });
       }
       if (!Flags.get('pickup_hc_' + mapId)) {
-        this.spawnPickup(bx + 20, by, { item: 'heartContainer' }, { persistentId: 'hc_' + mapId });
+        this.spawnPickup(bx + 20, by, { item: 'heartContainer' }, { persistentId: 'hc_' + mapId, taken });
       }
-      const spr = this.add.sprite(bx - 24, by, ART.tex('portal', 0)).setDepth(14);
-      this.portalLive.push({ sprite: spr, tx: Math.floor((bx - 24) / 16), ty: Math.floor(by / 16), destroy: () => spr.destroy() });
+      this.spawnPortal(bx - 24, by, taken);
     }
 
     // player placement
@@ -470,8 +470,40 @@ window.GameScene = class GameScene extends Phaser.Scene {
     return s;
   }
 
+  // Nearest tile center where a drop/portal can sit: walkable, not a pit,
+  // hazard or warp tile, and not already used this placement round (`taken`).
+  // Bosses die pressed against walls (bramblehorn charges them!), so anything
+  // spawned relative to a death position MUST be snapped through this.
+  safeDropPoint(px, py, taken) {
+    const T = CONFIG.TILE;
+    const cx = Phaser.Math.Clamp(Math.floor(px / T), 0, CONFIG.ROOM_W - 1);
+    const cy = Phaser.Math.Clamp(Math.floor(py / T), 0, CONFIG.ROOM_H - 1);
+    const ok = (tx, ty) => {
+      if (tx < 0 || ty < 0 || tx >= CONFIG.ROOM_W || ty >= CONFIG.ROOM_H) return false;
+      if (taken && taken.has(tx + ',' + ty)) return false;
+      const td = TILES.get(this.tileAt(tx, ty));
+      if (td.pit || td.hazard || td.warpTile) return false;
+      return !this.blockedAt(tx * T + 8, ty * T + 8, {});
+    };
+    for (let r = 0; r <= 6; r++) {
+      for (let dy = -r; dy <= r; dy++) {
+        for (let dx = -r; dx <= r; dx++) {
+          if (Math.max(Math.abs(dx), Math.abs(dy)) !== r) continue;
+          const tx = cx + dx, ty = cy + dy;
+          if (ok(tx, ty)) {
+            if (taken) taken.add(tx + ',' + ty);
+            return { x: tx * T + 8, y: ty * T + 8 };
+          }
+        }
+      }
+    }
+    return this.entryPos ? { x: this.entryPos.x, y: this.entryPos.y } : { x: cx * T + 8, y: cy * T + 8 };
+  }
+
   spawnPickup(px, py, spec, opts) {
     opts = opts || {};
+    const pt = this.safeDropPoint(px, py, opts.taken);
+    px = pt.x; py = pt.y;
     let art = 'gem';
     if (spec.item) art = ITEMS[spec.item] ? ITEMS[spec.item].art : spec.item;
     else if (spec.gems) art = spec.gems >= 5 ? 'gemBlue' : 'gem';
@@ -485,6 +517,16 @@ window.GameScene = class GameScene extends Phaser.Scene {
     s.bobBase = py;
     this.pickupsLive.push(s);
     return s;
+  }
+
+  spawnPortal(px, py, taken) {
+    const pt = this.safeDropPoint(px, py, taken);
+    const spr = this.add.sprite(pt.x, pt.y, ART.tex('portal', 0)).setDepth(14);
+    this.portalLive.push({
+      sprite: spr, tx: Math.floor(pt.x / CONFIG.TILE), ty: Math.floor(pt.y / CONFIG.TILE),
+      destroy: () => spr.destroy(),
+    });
+    this.spawnEffect('sparkle', pt.x, pt.y, 100);
   }
 
   spawnEffect(art, x, y, msPerFrame) {
@@ -1000,15 +1042,15 @@ window.GameScene = class GameScene extends Phaser.Scene {
       // rewards only land if the player is still here; loadRoom re-offers
       // anything uncollected on the next visit to the boss room
       if (sameRoom()) {
+        const taken = new Set();
         const shard = DUNGEON_SHARDS[deathMap];
         if (shard && GS.shards.indexOf(shard) < 0 && !Flags.get('pickup_shard_' + deathMap)) {
-          this.spawnPickup(bx, by, { item: shard }, { persistentId: 'shard_' + deathMap });
+          this.spawnPickup(bx, by, { item: shard }, { persistentId: 'shard_' + deathMap, taken });
         }
         if (!Flags.get('pickup_hc_' + deathMap)) {
-          this.spawnPickup(bx + 20, by, { item: 'heartContainer' }, { persistentId: 'hc_' + deathMap });
+          this.spawnPickup(bx + 20, by, { item: 'heartContainer' }, { persistentId: 'hc_' + deathMap, taken });
         }
-        const spr = this.add.sprite(bx - 24, by, ART.tex('portal', 0)).setDepth(14);
-        this.portalLive.push({ sprite: spr, tx: Math.floor((bx - 24) / 16), ty: Math.floor(by / 16), destroy: () => spr.destroy() });
+        this.spawnPortal(bx - 24, by, taken);
         AUDIO.playSong(WORLD.musicFor(this.mapId, this.room));
       }
       this.autoSave();
