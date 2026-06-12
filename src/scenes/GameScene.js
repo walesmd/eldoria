@@ -214,12 +214,20 @@ window.GameScene = class GameScene extends Phaser.Scene {
         const td = TILES.get(this.grid[y][x]);
         if ((td.bomb || td.cut) && Flags.get(`tile_${mapId}_${roomKey}_${x}_${y}`)) {
           const hidden = (room.warps || []).some((w) => w.x === x && w.y === y && w.hidden);
-          this.grid[y][x] = hidden ? 'S' : (td.becomes || '.');
+          this.grid[y][x] = hidden ? 'S' : this.groundedBecomes(td.becomes);
         }
+      }
+    }
+    // permanently opened doors show a real floor pathway, not bare wall
+    for (const d of room.doors || []) {
+      if (Flags.get(`door_${mapId}_${roomKey}_${d.id}`) &&
+          d.y >= 0 && d.y < CONFIG.ROOM_H && d.x >= 0 && d.x < CONFIG.ROOM_W) {
+        this.grid[d.y][d.x] = WORLD.groundFor(mapId, room);
       }
     }
 
     // --- draw tiles ---
+    this.tileRefs = [];
     const ground = WORLD.groundFor(mapId, room);
     for (let y = 0; y < CONFIG.ROOM_H; y++) {
       for (let x = 0; x < CONFIG.ROOM_W; x++) {
@@ -361,6 +369,15 @@ window.GameScene = class GameScene extends Phaser.Scene {
     const T = CONFIG.TILE;
     ground = ground || WORLD.groundFor(this.mapId, this.room);
     const ch = this.grid[y][x];
+    // destroy anything previously drawn for this cell: a stale depth-1
+    // overlay would keep rendering above a depth-0 replacement (broken pots
+    // looked intact in dungeons because the new floor drew UNDER the old pot)
+    if (!this.tileRefs[y]) this.tileRefs[y] = [];
+    const old = this.tileRefs[y][x];
+    if (old) {
+      this.animTiles = this.animTiles.filter((a) => !old.includes(a.img));
+      for (const img of old) img.destroy();
+    }
     const imgs = [];
     const base = this.add.image(x * T + 8, y * T + 8, ART.tex(TILES.get(ground).name, 0)).setDepth(0);
     imgs.push(base);
@@ -370,13 +387,20 @@ window.GameScene = class GameScene extends Phaser.Scene {
       imgs.push(img);
       if (ART.frames(name) > 1) this.animTiles.push({ img, name, frame: 0 });
     }
+    this.tileRefs[y][x] = imgs;
     this.tileImgs.push(...imgs);
     return imgs;
   }
 
   redrawTile(tx, ty) {
-    // lazy: draw the new tile on top (rooms are short-lived; fine)
     this.drawTileAt(tx, ty);
+  }
+
+  // generic floor results swap to the room's natural ground — a village pot
+  // leaves grass behind, not a slab of dungeon floor
+  groundedBecomes(becomes) {
+    const b = becomes || '.';
+    return (b === '.' || b === 'd' || b === 'e') ? WORLD.groundFor(this.mapId, this.room) : b;
   }
 
   // ============================== spawning ==============================
@@ -806,6 +830,10 @@ window.GameScene = class GameScene extends Phaser.Scene {
     if (d.isOpen) return;
     d.isOpen = true;
     d.sprite.setVisible(false);
+    // carve a visible pathway — hiding only the door sprite left the solid
+    // wall tile showing, so unlocked doors looked like plain wall
+    this.setTile(d.tx, d.ty, WORLD.groundFor(this.mapId, this.room));
+    this.spawnEffect('sparkle', d.tx * CONFIG.TILE + 8, d.ty * CONFIG.TILE + 8, 90);
     this.sfx('doorOpen');
     if (persist || (d.def.opens && d.def.opens.persist)) {
       Flags.set(`door_${this.mapId}_${this.roomKey}_${d.def.id}`);
@@ -885,7 +913,7 @@ window.GameScene = class GameScene extends Phaser.Scene {
     const ch = this.tileAt(tx, ty);
     const td = TILES.get(ch);
     if (!(how === 'cut' ? td.cut : td.bomb)) return;
-    this.setTile(tx, ty, td.becomes || '.');
+    this.setTile(tx, ty, this.groundedBecomes(td.becomes));
     this.spawnEffect('dust', tx * CONFIG.TILE + 8, ty * CONFIG.TILE + 8, 80);
     if (how === 'cut') this.sfx('hit');
 
